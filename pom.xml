@@ -3,11 +3,11 @@
   <modelVersion>4.0.0</modelVersion>
 
   <groupId>com.github.trylks</groupId>
-  <artifactId>java.utilities</artifactId>
+  <artifactId>sanity.commons</artifactId>
   <version>0.0.1</version>
   <packaging>jar</packaging>
 
-  <name>java.utilities</name>
+  <name>sanity.commons</name>
   <url>http://maven.apache.org</url>
 
   <properties>
