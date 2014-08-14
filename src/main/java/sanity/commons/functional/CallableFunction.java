@@ -1,4 +1,4 @@
-package java.utilities.functional;
+package sanity.commons.functional;
 
 import java.util.concurrent.Callable;
 

@@ -1,4 +1,4 @@
-package java.utilities.functional;
+package sanity.commons.functional;
 
 public class CurrifiedCallableFunction<In, Out> implements Function<In, Out> {
 

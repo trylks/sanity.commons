@@ -1,16 +1,17 @@
-package java.utilities.functional;
+package sanity.commons.functional;
 
 import java.util.Iterator;
 import java.util.LinkedList;
 import java.util.concurrent.ExecutionException;
 import java.util.concurrent.Future;
-import java.utilities.concurrency.Globals;
+
+import sanity.commons.concurrency.Globals;
 
 public class CFMap<I, O> implements FMap<I, O> {
 
 	private CurrifiedCallableFunction<I, O> f;
 
-	private CFMap(Function<I, O> f) {
+	public CFMap(Function<I, O> f) {
 		this.f = new CurrifiedCallableFunction<I, O>(f);
 	}
 
@@ -35,7 +36,8 @@ public class CFMap<I, O> implements FMap<I, O> {
 	public class CFMapIterator implements Iterator<O> {
 
 		private Iterator<I> input;
-		private LinkedList<Future<O>> queue;
+		private LinkedList<Future<O>> queue = new LinkedList<Future<O>>();
+		private O nextElement = null;
 
 		public CFMapIterator(Iterator<I> input) {
 			this.input = input;
@@ -49,21 +51,31 @@ public class CFMap<I, O> implements FMap<I, O> {
 		}
 
 		public boolean hasNext () {
-			return this.queue.size() > 0;
+			if (this.nextElement != null)
+				return true;
+			this.updateNextIfPossible();
+			return this.nextElement != null;
+		}
+
+		private O updateNextIfPossible () {
+			O oldnext = this.nextElement;
+			this.nextElement = null;
+			while (this.nextElement == null && this.queue.size() > 0) {
+				this.enqueueIfPossible();
+				try {
+					this.nextElement = this.queue.poll().get();
+				} catch (InterruptedException e) {
+					e.printStackTrace();
+				} catch (ExecutionException e) {
+					e.printStackTrace();
+				}
+			}
+			return oldnext;
 		}
 
 		public O next () {
 			this.enqueueIfPossible();
-			try {
-				return this.queue.poll().get();
-			} catch (InterruptedException e) {
-				// TODO Auto-generated catch block
-				e.printStackTrace();
-			} catch (ExecutionException e) {
-				// TODO Auto-generated catch block
-				e.printStackTrace();
-			}
-			return null;
+			return this.updateNextIfPossible();
 		}
 
 		public void remove () {

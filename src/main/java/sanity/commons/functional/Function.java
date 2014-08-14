@@ -1,4 +1,4 @@
-package java.utilities.functional;
+package sanity.commons.functional;
 
 public interface Function<I, O> {
 

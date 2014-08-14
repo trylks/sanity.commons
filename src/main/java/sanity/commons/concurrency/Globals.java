@@ -1,4 +1,4 @@
-package java.utilities.concurrency;
+package sanity.commons.concurrency;
 
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
